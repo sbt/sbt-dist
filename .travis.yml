@@ -7,7 +7,10 @@ scala: 2.10.7
 env:
   global:
     - ADOPTOPENJDK=8
-
+    # travis encrypt BINTRAY_USER="****" --repo sbt/sbt-dist
+    - secure: "hKqNOo1MFYe2smiuGj83MmOq3Ba1mdpuIxOEqSl59CaaC64BN6261/7Tb8DqMEvRTSPslc4VYFGs29fRC0VIN+6uIFa+7XNkh9MXB5hNPDR9fjOy5XA9TtMuNEBAL0nqTFDRR7O0XIbFL+SyoWLv1n9Xw9j96H5OaWalN1FXQ39VCC83V0xt1v/Kvwx/76SA6dfxERjoCxHQmYnz+7+S4AyCaSy81atzX2EH7BtmduZusYeGkXbISuhLM+pA63x8f+L95GgOD70ZffK5jvlf7h5NJpyiIfd9xipTt2TxiD3getXDB+9LE1VVe8rrbjFXkRnSoCyPbONM/BMrpC5iJJKJNWhhL2Hp1fp7qF2kovLWPGcGo2+WD6KC0mfYhlCvV8As4qDpsG5Pz8S2l/PbOZrurPJPt6zSJn4k4fMv3640grjr1Q046+WM02JK7WKbJzbQZu3teTFLnuW/T6IaHjHfNgdLe8rZ0sRNwVTbhGvrhY/qiKwiXsErJpDBt+mpVsS7GuX3RZ4KRqsrIE+VHAe0Kd0odNR7VR1wSz06MUaQyPeeCzLmkxtSsKl0ZbKhySWPeVrpnpXtE04B+4vHOA1COaTQG++VQGzmF+KJpmFTcf5Wtrya2L4gu9B6SCKYZA9e0sgFb41nOav6KUSexy09Fo1PzspO7sAcmiKS/20="
+    # travis encrypt BINTRAY_PASS="****" --repo sbt/sbt-dist
+    - secure: "Mp6KXAVcWQg1IJpp65WRw5H4epY611sKilBrZgjqbhqj9UaerZx1KV7Y7iXSayWJm8bWOJU4jBLDqqo96w1zCcQ9G/fABQdg5Gbm04gje3Eu+SU9fKGF6mZwSuKz41YN4J2zSjQppK7qu9YU+fNlJWkSUO2cFekkvx8zkEuVLLtEdJGt/pxE0WQgX4xhzTD8i4h/yoEJMyYfhWroO6ub/yZVMziFzqbRtmbOoDy/BsxOoVytJ2YI3o7Nm+zeWccnUgGa4n+aawv1ZE+Bv33HR7Q+jTebsYRBnIWaDyWAukLc1r7KUJu4UJyNqd7BsJFUQLcvnZSIKpcGPecQjGEHufdadItqzVDdRElKXgEtkBxhypc1v+ZYUTaeCjN2XDmFGIfDnvXaz4Avs5snsL/ozMw5ROJj2Y1DUKfeXuS1BQQzDYcjpCjXBGv473RzSZmmHJBSTbaBjzPNoeFxxgkdSfbuIjP9SMaGEVi5RhSVPOC5z1fvKbPGRvs5UANuy55eRP/UAXmpZ4xJlSzrV/5FdRr+/oSaMOoBBJrP201dwzkfifuZsyjA4asFSDRUvQfbRcSj6qS7wbt35wbXABhxINDN4zUI0KzmTUwi7la93srOIzh22+pVN6NlqO1jw/XQ7NgojFHpMyEEIxwgUnHLCcpDaywWsk7wjx/sq91sQTY="
 before_install:
   # adding $HOME/.sdkman to cache would create an empty directory, which interferes with the initial installation
   - "[[ -d /home/travis/.sdkman/ ]] && [[ -d /home/travis/.sdkman/bin/ ]] || rm -rf /home/travis/.sdkman/"
