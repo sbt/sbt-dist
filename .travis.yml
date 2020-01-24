@@ -21,6 +21,7 @@ matrix:
         - "PowerShell -ExecutionPolicy Bypass -Command '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-Expression (Invoke-WebRequest https://raw.githubusercontent.com/shyiko/jabba/0.11.2/install.ps1 -UseBasicParsing).Content'"
       install:
         - cinst -y wixtoolset
+        - export WIX="C:\\Program Files (x86)\\WiX Toolset v3.11\\"
         - $JABBA_HOME/bin/jabba.exe install $TRAVIS_JDK && export JAVA_HOME="$JABBA_HOME/jdk/$TRAVIS_JDK" && export PATH="$JAVA_HOME/bin:$PATH"
         - java -Xmx32m -version
         - curl https://piccolo.link/sbt-1.2.8.zip -L --output /tmp/sbt.zip
