@@ -1,6 +1,3 @@
-dist: xenial
-group: stable
-
 language: scala
 scala: 2.10.7
 
@@ -11,31 +8,49 @@ env:
     - secure: "hKqNOo1MFYe2smiuGj83MmOq3Ba1mdpuIxOEqSl59CaaC64BN6261/7Tb8DqMEvRTSPslc4VYFGs29fRC0VIN+6uIFa+7XNkh9MXB5hNPDR9fjOy5XA9TtMuNEBAL0nqTFDRR7O0XIbFL+SyoWLv1n9Xw9j96H5OaWalN1FXQ39VCC83V0xt1v/Kvwx/76SA6dfxERjoCxHQmYnz+7+S4AyCaSy81atzX2EH7BtmduZusYeGkXbISuhLM+pA63x8f+L95GgOD70ZffK5jvlf7h5NJpyiIfd9xipTt2TxiD3getXDB+9LE1VVe8rrbjFXkRnSoCyPbONM/BMrpC5iJJKJNWhhL2Hp1fp7qF2kovLWPGcGo2+WD6KC0mfYhlCvV8As4qDpsG5Pz8S2l/PbOZrurPJPt6zSJn4k4fMv3640grjr1Q046+WM02JK7WKbJzbQZu3teTFLnuW/T6IaHjHfNgdLe8rZ0sRNwVTbhGvrhY/qiKwiXsErJpDBt+mpVsS7GuX3RZ4KRqsrIE+VHAe0Kd0odNR7VR1wSz06MUaQyPeeCzLmkxtSsKl0ZbKhySWPeVrpnpXtE04B+4vHOA1COaTQG++VQGzmF+KJpmFTcf5Wtrya2L4gu9B6SCKYZA9e0sgFb41nOav6KUSexy09Fo1PzspO7sAcmiKS/20="
     # travis encrypt BINTRAY_PASS="****" --repo sbt/sbt-dist
     - secure: "Mp6KXAVcWQg1IJpp65WRw5H4epY611sKilBrZgjqbhqj9UaerZx1KV7Y7iXSayWJm8bWOJU4jBLDqqo96w1zCcQ9G/fABQdg5Gbm04gje3Eu+SU9fKGF6mZwSuKz41YN4J2zSjQppK7qu9YU+fNlJWkSUO2cFekkvx8zkEuVLLtEdJGt/pxE0WQgX4xhzTD8i4h/yoEJMyYfhWroO6ub/yZVMziFzqbRtmbOoDy/BsxOoVytJ2YI3o7Nm+zeWccnUgGa4n+aawv1ZE+Bv33HR7Q+jTebsYRBnIWaDyWAukLc1r7KUJu4UJyNqd7BsJFUQLcvnZSIKpcGPecQjGEHufdadItqzVDdRElKXgEtkBxhypc1v+ZYUTaeCjN2XDmFGIfDnvXaz4Avs5snsL/ozMw5ROJj2Y1DUKfeXuS1BQQzDYcjpCjXBGv473RzSZmmHJBSTbaBjzPNoeFxxgkdSfbuIjP9SMaGEVi5RhSVPOC5z1fvKbPGRvs5UANuy55eRP/UAXmpZ4xJlSzrV/5FdRr+/oSaMOoBBJrP201dwzkfifuZsyjA4asFSDRUvQfbRcSj6qS7wbt35wbXABhxINDN4zUI0KzmTUwi7la93srOIzh22+pVN6NlqO1jw/XQ7NgojFHpMyEEIxwgUnHLCcpDaywWsk7wjx/sq91sQTY="
-before_install:
-  # adding $HOME/.sdkman to cache would create an empty directory, which interferes with the initial installation
-  - "[[ -d /home/travis/.sdkman/ ]] && [[ -d /home/travis/.sdkman/bin/ ]] || rm -rf /home/travis/.sdkman/"
-  - curl -sL https://get.sdkman.io | bash
-  - echo sdkman_auto_answer=true > /home/travis/.sdkman/etc/config
-  - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
-  - source "/home/travis/.sdkman/bin/sdkman-init.sh"
 
-install:
-  - sdk install java $(sdk list java | grep -o "$ADOPTOPENJDK\.[0-9\.]*hs-adpt" | head -1) || true
-  - unset _JAVA_OPTIONS
-  - java -Xmx32m -version
-  # detect sbt version from project/build.properties
-  - export TRAVIS_SBT=$(grep sbt.version= project/build.properties | sed -e 's/sbt.version=//g' ) && echo "sbt $TRAVIS_SBT"
-  - sdk install sbt $TRAVIS_SBT || true
-  - unset SBT_OPTS
-  - unset JAVA_OPTS
+matrix:
+  include:
+    - os: windows
+      language: bash
+      env:
+        - TRAVIS_JDK=adopt@1.8.0-222
+        - JABBA_HOME=$HOME/.jabba
+      before_install:
+        - "PowerShell -ExecutionPolicy Bypass -Command '[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-Expression (Invoke-WebRequest https://raw.githubusercontent.com/shyiko/jabba/0.11.2/install.ps1 -UseBasicParsing).Content'"
+      install:
+        - $JABBA_HOME/bin/jabba.exe install $TRAVIS_JDK && export JAVA_HOME="$JABBA_HOME/jdk/$TRAVIS_JDK" && export PATH="$JAVA_HOME/bin:$PATH"
+        - java -Xmx32m -version
+        - curl https://piccolo.link/sbt-1.2.8.zip -L --output /tmp/sbt.zip
+        - unzip /tmp/sbt.zip -d $HOME/sbt
+        - export PATH="$HOME/sbt/sbt/bin:$PATH"
+      script:
+        - bin/run-ci-win.sh
 
-addons:
-  apt:
-    packages:
-      - fakeroot
-      - rpm
-
-script: bin/run-ci.sh
+    - os: linux
+      dist: xenial
+      before_install:
+        # adding $HOME/.sdkman to cache would create an empty directory, which interferes with the initial installation
+        - "[[ -d /home/travis/.sdkman/ ]] && [[ -d /home/travis/.sdkman/bin/ ]] || rm -rf /home/travis/.sdkman/"
+        - curl -sL https://get.sdkman.io | bash
+        - echo sdkman_auto_answer=true > /home/travis/.sdkman/etc/config
+        - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
+        - source "/home/travis/.sdkman/bin/sdkman-init.sh"
+      install:
+        - sdk install java $(sdk list java | grep -o "$ADOPTOPENJDK\.[0-9\.]*hs-adpt" | head -1) || true
+        - unset _JAVA_OPTIONS
+        - java -Xmx32m -version
+        # detect sbt version from project/build.properties
+        - export TRAVIS_SBT=$(grep sbt.version= project/build.properties | sed -e 's/sbt.version=//g' ) && echo "sbt $TRAVIS_SBT"
+        - sdk install sbt $TRAVIS_SBT || true
+        - unset SBT_OPTS
+        - unset JAVA_OPTS
+      addons:
+        apt:
+          packages:
+            - fakeroot
+            - rpm
+      script: bin/run-ci.sh
 
 before_cache:
   - find $HOME/.ivy2/cache -name "ivydata-*.properties" -delete
