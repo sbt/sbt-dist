@@ -26,6 +26,12 @@ install:
   - unset SBT_OPTS
   - unset JAVA_OPTS
 
+addons:
+  apt:
+    packages:
+      - fakeroot
+      - rpm
+
 script: bin/run-ci.sh
 
 before_cache:
