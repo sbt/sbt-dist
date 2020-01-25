@@ -8,7 +8,6 @@ env:
     - secure: "hKqNOo1MFYe2smiuGj83MmOq3Ba1mdpuIxOEqSl59CaaC64BN6261/7Tb8DqMEvRTSPslc4VYFGs29fRC0VIN+6uIFa+7XNkh9MXB5hNPDR9fjOy5XA9TtMuNEBAL0nqTFDRR7O0XIbFL+SyoWLv1n9Xw9j96H5OaWalN1FXQ39VCC83V0xt1v/Kvwx/76SA6dfxERjoCxHQmYnz+7+S4AyCaSy81atzX2EH7BtmduZusYeGkXbISuhLM+pA63x8f+L95GgOD70ZffK5jvlf7h5NJpyiIfd9xipTt2TxiD3getXDB+9LE1VVe8rrbjFXkRnSoCyPbONM/BMrpC5iJJKJNWhhL2Hp1fp7qF2kovLWPGcGo2+WD6KC0mfYhlCvV8As4qDpsG5Pz8S2l/PbOZrurPJPt6zSJn4k4fMv3640grjr1Q046+WM02JK7WKbJzbQZu3teTFLnuW/T6IaHjHfNgdLe8rZ0sRNwVTbhGvrhY/qiKwiXsErJpDBt+mpVsS7GuX3RZ4KRqsrIE+VHAe0Kd0odNR7VR1wSz06MUaQyPeeCzLmkxtSsKl0ZbKhySWPeVrpnpXtE04B+4vHOA1COaTQG++VQGzmF+KJpmFTcf5Wtrya2L4gu9B6SCKYZA9e0sgFb41nOav6KUSexy09Fo1PzspO7sAcmiKS/20="
     # travis encrypt BINTRAY_PASS="****" --repo sbt/sbt-dist
     - secure: "Mp6KXAVcWQg1IJpp65WRw5H4epY611sKilBrZgjqbhqj9UaerZx1KV7Y7iXSayWJm8bWOJU4jBLDqqo96w1zCcQ9G/fABQdg5Gbm04gje3Eu+SU9fKGF6mZwSuKz41YN4J2zSjQppK7qu9YU+fNlJWkSUO2cFekkvx8zkEuVLLtEdJGt/pxE0WQgX4xhzTD8i4h/yoEJMyYfhWroO6ub/yZVMziFzqbRtmbOoDy/BsxOoVytJ2YI3o7Nm+zeWccnUgGa4n+aawv1ZE+Bv33HR7Q+jTebsYRBnIWaDyWAukLc1r7KUJu4UJyNqd7BsJFUQLcvnZSIKpcGPecQjGEHufdadItqzVDdRElKXgEtkBxhypc1v+ZYUTaeCjN2XDmFGIfDnvXaz4Avs5snsL/ozMw5ROJj2Y1DUKfeXuS1BQQzDYcjpCjXBGv473RzSZmmHJBSTbaBjzPNoeFxxgkdSfbuIjP9SMaGEVi5RhSVPOC5z1fvKbPGRvs5UANuy55eRP/UAXmpZ4xJlSzrV/5FdRr+/oSaMOoBBJrP201dwzkfifuZsyjA4asFSDRUvQfbRcSj6qS7wbt35wbXABhxINDN4zUI0KzmTUwi7la93srOIzh22+pVN6NlqO1jw/XQ7NgojFHpMyEEIxwgUnHLCcpDaywWsk7wjx/sq91sQTY="
-    - TRAVIS_TAG=${TRAVIS_TAG:-untagged-$(date +'%Y%m%d%H%M')-$(git log --format=%h -1)}
 
 matrix:
   include:
@@ -38,7 +37,7 @@ matrix:
           secure: "et0KhB9RVm39p+YPwYhZqktfOoWn3klI18lg85Bkju/U3X6bwmS/UyLEoA4k2OhBEMSm+igeoNPVeovVEqI1q8cMd5b6UBIAkv5N4fQvMXFyW7LLDOsvPysZxm3xqRuY8jw2+lj3zWdGB2oyvXwRXSMsuXBy6L0bJ1JJoeUfEqcD3STj5JG4Wx9IbWf8FeX7zICnkUjbjYipjh7Rmmwf9JtB3pQR4O8kIGTOsWLDMr3qbNt1bWc2SQxTOqxog7OSvk4QMe9bapqdiaj4yR2Ykmt1iSXnMWpy0KVQRGIx6zROA5tL2Brwbo6a4PiJqxDL9L0GViBZ5sNO/PDeqqx4Uo27MugnnmXgDJWXGkOo2E6Pt/oHs3wik0reUt+Oya+IFcDe7rwnuIXzJY49WpfcvdJJ4X8YHQjQ2uDXSQjis7NWhdfsHDzgKGD3DiKgnjFBDPKyNEfTpyd7Dh9skQiKMZbiUJCaxoOg1cJNon8ALg1vJz3NrvEPzkwKojRkjY1g8mkae9R3g1TQuuiV3CQPXGx5+sBSydUjKmR7+GnHfouV3N0GqbRjfRjoZFS6r+QSDRvkCGRjbwwBk6qaSYRIpqQgdwfvVy7weXz2oBoNXPrL29TeUww/ATIg56CqAtVPZItHtzXx8Us5H0X9nPiGA9vIu5PRRva3puxkRv8+5dA="
         file_glob: true
         file: "sbt-launcher-package/target/windows/*.msi"
-        tag_name: $TRAVIS_TAG
+        tag_name: "${TRAVIS_TAG:-untagged-$(date +'%Y%m%d%H%M')-$(git log --format=%h -1)}"
         on:
           condition: "$mode = build"
           branch: master
@@ -75,7 +74,7 @@ matrix:
           secure: "et0KhB9RVm39p+YPwYhZqktfOoWn3klI18lg85Bkju/U3X6bwmS/UyLEoA4k2OhBEMSm+igeoNPVeovVEqI1q8cMd5b6UBIAkv5N4fQvMXFyW7LLDOsvPysZxm3xqRuY8jw2+lj3zWdGB2oyvXwRXSMsuXBy6L0bJ1JJoeUfEqcD3STj5JG4Wx9IbWf8FeX7zICnkUjbjYipjh7Rmmwf9JtB3pQR4O8kIGTOsWLDMr3qbNt1bWc2SQxTOqxog7OSvk4QMe9bapqdiaj4yR2Ykmt1iSXnMWpy0KVQRGIx6zROA5tL2Brwbo6a4PiJqxDL9L0GViBZ5sNO/PDeqqx4Uo27MugnnmXgDJWXGkOo2E6Pt/oHs3wik0reUt+Oya+IFcDe7rwnuIXzJY49WpfcvdJJ4X8YHQjQ2uDXSQjis7NWhdfsHDzgKGD3DiKgnjFBDPKyNEfTpyd7Dh9skQiKMZbiUJCaxoOg1cJNon8ALg1vJz3NrvEPzkwKojRkjY1g8mkae9R3g1TQuuiV3CQPXGx5+sBSydUjKmR7+GnHfouV3N0GqbRjfRjoZFS6r+QSDRvkCGRjbwwBk6qaSYRIpqQgdwfvVy7weXz2oBoNXPrL29TeUww/ATIg56CqAtVPZItHtzXx8Us5H0X9nPiGA9vIu5PRRva3puxkRv8+5dA="
         file_glob: true
         file: "sbt-launcher-package/target/universal/*.(zip|tgz)"
-        tag_name: $TRAVIS_TAG
+        tag_name: "${TRAVIS_TAG:-untagged-$(date +'%Y%m%d%H%M')-$(git log --format=%h -1)}"
         on:
           condition: "$mode = build"
           branch: master
