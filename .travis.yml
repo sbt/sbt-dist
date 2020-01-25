@@ -31,11 +31,13 @@ matrix:
         - bin/run-ci-win.sh
       deploy:
         provider: releases
+        edge: true
         # travis encrypt "****" --repo sbt/sbt-dist
         api_key:
           secure: "et0KhB9RVm39p+YPwYhZqktfOoWn3klI18lg85Bkju/U3X6bwmS/UyLEoA4k2OhBEMSm+igeoNPVeovVEqI1q8cMd5b6UBIAkv5N4fQvMXFyW7LLDOsvPysZxm3xqRuY8jw2+lj3zWdGB2oyvXwRXSMsuXBy6L0bJ1JJoeUfEqcD3STj5JG4Wx9IbWf8FeX7zICnkUjbjYipjh7Rmmwf9JtB3pQR4O8kIGTOsWLDMr3qbNt1bWc2SQxTOqxog7OSvk4QMe9bapqdiaj4yR2Ykmt1iSXnMWpy0KVQRGIx6zROA5tL2Brwbo6a4PiJqxDL9L0GViBZ5sNO/PDeqqx4Uo27MugnnmXgDJWXGkOo2E6Pt/oHs3wik0reUt+Oya+IFcDe7rwnuIXzJY49WpfcvdJJ4X8YHQjQ2uDXSQjis7NWhdfsHDzgKGD3DiKgnjFBDPKyNEfTpyd7Dh9skQiKMZbiUJCaxoOg1cJNon8ALg1vJz3NrvEPzkwKojRkjY1g8mkae9R3g1TQuuiV3CQPXGx5+sBSydUjKmR7+GnHfouV3N0GqbRjfRjoZFS6r+QSDRvkCGRjbwwBk6qaSYRIpqQgdwfvVy7weXz2oBoNXPrL29TeUww/ATIg56CqAtVPZItHtzXx8Us5H0X9nPiGA9vIu5PRRva3puxkRv8+5dA="
-        file: "target/windows/*.msi"
-        skip_cleanup: true
+        file_glob: true
+        file: "sbt-launcher-package/target/windows/*.msi"
+        tag_name: ${TRAVIS_TAG:-untagged-$(date +'%Y%m%d%H%M')-$(git log --format=%h -1)}
         on:
           condition: $mode=build
           branch: master

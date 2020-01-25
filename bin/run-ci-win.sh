@@ -13,6 +13,7 @@ case ${mode:-} in
   build)
     echo Windows build
     buildWindows
+    ls sbt-launcher-package/target/windows
     ;;
   *)
     echo no mode is set
