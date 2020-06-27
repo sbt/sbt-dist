@@ -4,7 +4,7 @@ set -eu
 buildLinux() {
   git clone https://github.com/sbt/sbt-launcher-package.git
   pushd sbt-launcher-package
-  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=true clean universal:packageBin universal:packageZipTarball
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false clean universal:packageBin universal:packageZipTarball
   mv target/universal/sbt.zip target/universal/sbt-$SBT_VER.zip
   mv target/universal/sbt.tgz target/universal/sbt-$SBT_VER.tgz
   popd
