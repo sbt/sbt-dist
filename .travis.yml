@@ -24,7 +24,7 @@ matrix:
         - export WIX="C:\\Program Files (x86)\\WiX Toolset v3.11\\"
         - $JABBA_HOME/bin/jabba.exe install $TRAVIS_JDK && export JAVA_HOME="$JABBA_HOME/jdk/$TRAVIS_JDK" && export PATH="$JAVA_HOME/bin:$PATH"
         - java -Xmx32m -version
-        - curl https://piccolo.link/sbt-1.2.8.zip -L --output /tmp/sbt.zip
+        - curl https://github.com/sbt/sbt/releases/download/v1.3.13/sbt-1.3.13.zip -L --output /tmp/sbt.zip
         - unzip /tmp/sbt.zip -d $HOME/sbt
         - export PATH="$HOME/sbt/sbt/bin:$PATH"
       script:
