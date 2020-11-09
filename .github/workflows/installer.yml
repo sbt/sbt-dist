@@ -60,3 +60,10 @@ jobs:
         find $HOME/.ivy2/cache                       -name "ivydata-*.properties" -delete || true
         find $HOME/.cache/coursier/v1                -name "ivydata-*.properties" -delete || true
         find $HOME/.sbt                              -name "*.lock"               -delete || true
+    - name: Archive installer artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist
+        path: |
+          $HOME/work/sbt-dist/sbt-dist/sbt-launcher-package/target/sbt-launcher-package/target/windows
+          $HOME/work/sbt-dist/sbt-dist/sbt-launcher-package/target/universal
