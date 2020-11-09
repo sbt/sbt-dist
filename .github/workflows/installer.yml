@@ -1,0 +1,59 @@
+name: Make installer
+on:
+  workflow_dispatch:
+    inputs:
+      SBT_VER:
+        description: the version of sbt to release
+        required: true
+        default: 1.4.x
+      DIST_PATCHVER:
+        description: patch version if needed
+        required: true
+        default: 0
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            java: 8
+            jobtype: 1
+          - os: windows-latest
+            java: 8
+            jobtype: 1
+    runs-on: ${{ matrix.os }}
+    env:
+      JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Setup
+      uses: olafurpg/setup-scala@v10
+      with:
+        java-version: "adopt@1.${{ matrix.java }}"
+    - name: Coursier cache
+      uses: coursier/cache-action@v5
+    - name: Cache sbt
+      uses: actions/cache@v1
+      with:
+        path: ~/.sbt
+        key: ${{ runner.os }}-sbt-cache-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
+    - name: Build
+      run: |
+        case ${{ matrix.jobtype }} in
+          1)
+            mode=build bin/run-ci.sh
+            ;;
+          2)
+            mode=build bin/run-ci-win.sh
+            ;;
+          *)
+            echo unknown jobtype
+            exit 1
+        esac
+        rm -rf "$HOME/.ivy2/local"
+        find $HOME/Library/Caches/Coursier/v1        -name "ivydata-*.properties" -delete || true
+        find $HOME/.ivy2/cache                       -name "ivydata-*.properties" -delete || true
+        find $HOME/.cache/coursier/v1                -name "ivydata-*.properties" -delete || true
+        find $HOME/.sbt                              -name "*.lock"               -delete || true
