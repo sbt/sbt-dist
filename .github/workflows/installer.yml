@@ -42,6 +42,7 @@ jobs:
         path: ~/.sbt
         key: ${{ runner.os }}-sbt-cache-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
     - name: Build
+      shell: bash
       run: |
         case ${{ matrix.jobtype }} in
           1)
