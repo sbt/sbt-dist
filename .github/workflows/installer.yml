@@ -60,10 +60,15 @@ jobs:
         find $HOME/.ivy2/cache                       -name "ivydata-*.properties" -delete || true
         find $HOME/.cache/coursier/v1                -name "ivydata-*.properties" -delete || true
         find $HOME/.sbt                              -name "*.lock"               -delete || true
-    - name: Archive installer artifacts
+    - name: Archive Windows installer artifacts
+      if: ${{ runner.os == 'Windows' }}
       uses: actions/upload-artifact@v2
       with:
         name: dist-${{ runner.os }}
-        path: |
-          sbt-launcher-package/target/windows
-          sbt-launcher-package/target/universal
+        path: sbt-launcher-package/target/windows
+    - name: Archive Linux installer artifacts
+      if: ${{ runner.os == 'Linux' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: dist-${{ runner.os }}
+        path: sbt-launcher-package/target/universal
