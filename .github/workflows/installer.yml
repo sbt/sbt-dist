@@ -2,11 +2,11 @@ name: Make installer
 on:
   workflow_dispatch:
     inputs:
-      SBT_VER:
+      sbt_ver:
         description: the version of sbt to release
         required: true
         default: 1.4.x
-      DIST_PATCHVER:
+      dist_patchver:
         description: patch version if needed
         required: true
         default: 0
@@ -25,6 +25,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     env:
       JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M
+      SBT_VER: ${{ github.event.inputs.sbt_ver }}
+      DIST_PATCHVER: ${{ github.event.inputs.dist_patchver }}
     steps:
     - name: Checkout
       uses: actions/checkout@v1
@@ -52,7 +54,7 @@ jobs:
             echo unknown jobtype
             exit 1
         esac
-        rm -rf "$HOME/.ivy2/local"
+        rm -rf "$HOME/.ivy2/local" || true
         find $HOME/Library/Caches/Coursier/v1        -name "ivydata-*.properties" -delete || true
         find $HOME/.ivy2/cache                       -name "ivydata-*.properties" -delete || true
         find $HOME/.cache/coursier/v1                -name "ivydata-*.properties" -delete || true
