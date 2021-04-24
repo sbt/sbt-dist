@@ -65,10 +65,10 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: dist-${{ runner.os }}
-        path: sbt-launcher-package/target/windows
+        path: sbt/launcher-package/target/windows
     - name: Archive Linux installer artifacts
       if: ${{ runner.os == 'Linux' }}
       uses: actions/upload-artifact@v2
       with:
         name: dist-${{ runner.os }}
-        path: sbt-launcher-package/target/universal
+        path: sbt/launcher-package/target/universal
