@@ -23,8 +23,9 @@ releaseLinux() {
   echo "password = $BINTRAY_PASS"  >> $HOME/.sbt/credentials
   sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlauncher=false rpm:publish debian:publish
   rm -f $HOME/.sbt/credentials
-  # curl --user "$BINTRAY_USER:$BINTRAY_PASS" --data "" https://bintray.com/api/v1/calc_metadata/sbt/rpm
-  # curl --user "$BINTRAY_USER:$BINTRAY_PASS" --data "" https://bintray.com/api/v1/calc_metadata/sbt/debian
+
+  # https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-CalculateDebianRepositoryMetadata
+  curl --user "$BINTRAY_USER:$BINTRAY_PASS" https://scala.jfrog.io/artifactory/api/deb/reindex/debian --data ""
   popd
 }
 
