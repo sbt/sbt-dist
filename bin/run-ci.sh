@@ -16,6 +16,7 @@ releaseLinux() {
   pushd sbt
   cd launcher-package
   echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
+  mkdir -p $HOME/.sbt/
   echo "realm = Artifactory Realm" >  $HOME/.sbt/credentials
   echo "host = scala.jfrog.io"     >> $HOME/.sbt/credentials
   echo "user = $BINTRAY_USER"      >> $HOME/.sbt/credentials
