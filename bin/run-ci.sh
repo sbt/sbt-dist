@@ -12,7 +12,8 @@ buildLinux() {
 }
 
 releaseLinux() {
-  git clone https://github.com/sbt/sbt.git
+  git clone https://github.com/eed3si9n/sbt.git
+  git checkout wip/linux2
   pushd sbt
   cd launcher-package
   echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
