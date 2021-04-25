@@ -12,9 +12,8 @@ buildLinux() {
 }
 
 releaseLinux() {
-  git clone https://github.com/eed3si9n/sbt.git
+  git clone https://github.com/sbt/sbt.git
   pushd sbt
-  git checkout wip/linux2
   cd launcher-package
   echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
   mkdir -p $HOME/.sbt/
@@ -22,8 +21,10 @@ releaseLinux() {
   echo "host = scala.jfrog.io"     >> $HOME/.sbt/credentials
   echo "user = $BINTRAY_USER"      >> $HOME/.sbt/credentials
   echo "password = $BINTRAY_PASS"  >> $HOME/.sbt/credentials
-  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlauncher=false rpm:publish debian:publish
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlaunch=false rpm:publish debian:publish
   rm -f $HOME/.sbt/credentials
+
+  # curl -H "X-JFrog-Art-Api:$BINTRAY_PASS" -XPUT "https://scala.jfrog.io/artifactory/debian/sbt-$SBT_VER.deb;deb.distribution=all;deb.component=main;deb.architecture=all" -T "target/sbt_$SBT_VER_all.deb"
 
   # https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-CalculateDebianRepositoryMetadata
   curl --user "$BINTRAY_USER:$BINTRAY_PASS" https://scala.jfrog.io/artifactory/api/deb/reindex/debian --data ""
