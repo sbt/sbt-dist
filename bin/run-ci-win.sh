@@ -6,6 +6,8 @@ buildWindows() {
   pushd sbt
   cd launcher-package
   sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false clean windows:packageBin
+  ls target
+  ls target/windows/
   mv target/windows/sbt.msi target/windows/sbt-$SBT_VER.msi
   popd
 }
