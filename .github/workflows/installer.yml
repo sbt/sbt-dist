@@ -10,7 +10,6 @@ on:
         description: patch version if needed
         required: true
         default: 0
-
 jobs:
   test:
     strategy:
@@ -18,9 +17,11 @@ jobs:
         include:
           - os: ubuntu-latest
             java: 8
+            distribution: temurin
             jobtype: 1
           - os: windows-latest
             java: 8
+            distribution: temurin
             jobtype: 2
     runs-on: ${{ matrix.os }}
     env:
@@ -28,33 +29,39 @@ jobs:
       SBT_VER: ${{ github.event.inputs.sbt_ver }}
       DIST_PATCHVER: ${{ github.event.inputs.dist_patchver }}
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
-    - name: Setup
-      uses: olafurpg/setup-scala@v10
+    - name: Checkout sbt/sbt-dist
+      uses: actions/checkout@v2
+    - name: Checkout sbt/sbt
+      uses: actions/checkout@v2
       with:
-        java-version: "adopt@1.${{ matrix.java }}"
+        repository: sbt/sbt
+        ref: v${{ github.event.inputs.sbt_ver }}
+        path: sbt
+    - name: Setup JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: "${{ matrix.distribution }}"
+        java-version: "${{ matrix.java }}"
     - name: Coursier cache
-      uses: coursier/cache-action@v5
+      uses: coursier/cache-action@v6
     - name: Cache sbt
-      uses: actions/cache@v1
+      uses: actions/cache@v2.1.6
       with:
         path: ~/.sbt
         key: ${{ runner.os }}-sbt-cache-${{ hashFiles('**/*.sbt') }}-${{ hashFiles('project/build.properties') }}
-    - name: Build
+    - name: Build (1)
+      if: ${{ matrix.jobtype == 1 }}
       shell: bash
       run: |
-        case ${{ matrix.jobtype }} in
-          1)
-            mode=build bin/run-ci.sh
-            ;;
-          2)
-            mode=build bin/run-ci-win.sh
-            ;;
-          *)
-            echo unknown jobtype
-            exit 1
-        esac
+        mode=build bin/run-ci.sh
+    - name: Build (2)
+      if: ${{ matrix.jobtype == 2 }}
+      shell: bash
+      run: |
+        mode=build bin/run-ci-win.sh
+    - name: Cleanup
+      shell: bash
+      run: |
         rm -rf "$HOME/.ivy2/local" || true
         find $HOME/Library/Caches/Coursier/v1        -name "ivydata-*.properties" -delete || true
         find $HOME/.ivy2/cache                       -name "ivydata-*.properties" -delete || true
