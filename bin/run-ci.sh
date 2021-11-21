@@ -2,7 +2,6 @@
 set -eu
 
 buildLinux() {
-  git clone https://github.com/sbt/sbt.git
   pushd sbt
   cd launcher-package
   sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false clean universal:packageBin universal:packageZipTarball
