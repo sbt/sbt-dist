@@ -42,6 +42,7 @@ jobs:
       with:
         distribution: "${{ matrix.distribution }}"
         java-version: "${{ matrix.java }}"
+    - uses: sbt/setup-sbt@v1
     - name: Coursier cache
       uses: coursier/cache-action@v6
     - name: Cache sbt
