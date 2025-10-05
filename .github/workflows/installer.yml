@@ -43,6 +43,8 @@ jobs:
         distribution: "${{ matrix.distribution }}"
         java-version: "${{ matrix.java }}"
     - uses: sbt/setup-sbt@v1
+      with:
+        sbt-runner-version: 1.11.5
     - name: Build (1)
       if: ${{ matrix.jobtype == 1 }}
       shell: bash
