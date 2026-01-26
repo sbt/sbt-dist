@@ -11,7 +11,7 @@ buildLinux() {
 
 releaseLinux() {
   pushd sbt
-  echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
+  echo "launcherPackage / credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
   mkdir -p $HOME/.sbt/
   echo "realm = Artifactory Realm" >  $HOME/.sbt/credentials
   echo "host = scala.jfrog.io"     >> $HOME/.sbt/credentials
