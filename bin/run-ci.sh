@@ -17,7 +17,13 @@ releaseLinux() {
   echo "host = scala.jfrog.io"     >> $HOME/.sbt/credentials
   echo "user = $BINTRAY_USER"      >> $HOME/.sbt/credentials
   echo "password = $BINTRAY_PASS"  >> $HOME/.sbt/credentials
-  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlaunch=false launcherPackage/Rpm/publish launcherPackage/Debian/packageBin
+
+  # comment out RPM
+  # sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlaunch=false launcherPackage/Rpm/publish launcherPackage/Debian/packageBin
+
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlaunch=false launcherPackage/Debian/packageBin
+
+
   rm -f $HOME/.sbt/credentials
 
   curl -H "X-JFrog-Art-Api:$BINTRAY_PASS" -XPUT "https://scala.jfrog.io/artifactory/debian/sbt-$SBT_VER.deb;deb.distribution=all;deb.component=main;deb.architecture=all" -T "launcher-package/target/sbt_${SBT_VER}_all.deb"
