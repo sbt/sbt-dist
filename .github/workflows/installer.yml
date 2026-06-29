@@ -30,9 +30,9 @@ jobs:
       DIST_PATCHVER: ${{ github.event.inputs.dist_patchver }}
     steps:
     - name: Checkout sbt/sbt-dist
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
     - name: Checkout sbt/sbt
-      uses: actions/checkout@v4
+      uses: actions/checkout@v7
       with:
         repository: sbt/sbt
         ref: v${{ github.event.inputs.sbt_ver }}
