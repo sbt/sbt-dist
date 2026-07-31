@@ -30,6 +30,9 @@ releaseLinux() {
 releaseNightly() {
   pushd sbt
 
+  gpg --version
+  echo "$PGP_SECRET" | base64 --decode | gpg --batch --import
+
   BASE_VERSION="2.1.0"
   DATE_STR="$(date -u +%Y%m%d)"
   if ! GIT_SHA_FULL="$(git rev-parse HEAD 2>/dev/null)"; then
