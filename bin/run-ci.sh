@@ -46,7 +46,7 @@ releaseNightly() {
   GIT_SHA_SHORT="${GIT_SHA_FULL:0:7}"
   NIGHTLY_VERSION="${BASE_VERSION}-bin-${DATE_STR}-${GIT_SHA_SHORT}-NIGHTLY"
 
-  sbt --server "-Dsbt.build.version=$NIGHTLY_VERSION" version "show publishTo"
+  sbt --server "-Dsbt.build.version=$NIGHTLY_VERSION" releaseLowerUtils release
 
   rm -f $HOME/.sbt/credentials
   popd
