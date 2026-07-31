@@ -61,6 +61,10 @@ case ${mode:-} in
     echo Linux release
     releaseLinux
     ;;
+  nightly)
+    echo nightly
+    releaseNightly
+    ;;
   *)
     echo no mode is set
     ;;

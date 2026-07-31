@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  linux-release:
+  nightly:
     strategy:
       matrix:
         include:
