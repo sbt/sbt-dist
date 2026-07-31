@@ -27,6 +27,31 @@ releaseLinux() {
   popd
 }
 
+releaseNightly() {
+  pushd sbt
+  echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
+  echo "ThisBuild / publishTo := Some(\"local-maven-nightlies\" at \"https://scala.jfrog.io/artifactory/local-maven-nightlies\")" >> local.sbt
+
+  mkdir -p $HOME/.sbt/
+  echo "realm = Artifactory Realm" >  $HOME/.sbt/credentials
+  echo "host = scala.jfrog.io"     >> $HOME/.sbt/credentials
+  echo "user = $BINTRAY_USER"      >> $HOME/.sbt/credentials
+  echo "password = $BINTRAY_PASS"  >> $HOME/.sbt/credentials
+  BASE_VERSION="2.1.0"
+  DATE_STR="$(date -u +%Y%m%d)"
+  if ! GIT_SHA_FULL="$(git rev-parse HEAD 2>/dev/null)"; then
+    echo "Error: not a valid git repository" >&2
+    exit 1
+  fi
+  GIT_SHA_SHORT="${GIT_SHA_FULL:0:7}"
+  NIGHTLY_VERSION="${BASE_VERSION}-bin-${DATE_STR}-${GIT_SHA_SHORT}-NIGHTLY"
+
+  sbt --server "-Dsbt.build.version=$NIGHTLY_VERSION" vesion "show publishTo"
+
+  rm -f $HOME/.sbt/credentials
+  popd
+}
+
 case ${mode:-} in
   build)
     echo Linux build

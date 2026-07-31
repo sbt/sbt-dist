@@ -1,0 +1,38 @@
+name: Nightly release
+on:
+  workflow_dispatch:
+
+jobs:
+  linux-release:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            java: 17
+            distribution: temurin
+    runs-on: ${{ matrix.os }}
+    env:
+      JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M
+    steps:
+    - name: Checkout sbt/sbt-dist
+      uses: actions/checkout@v7
+    - name: Checkout sbt/sbt
+      uses: actions/checkout@v7
+      with:
+        repository: sbt/sbt
+        ref: "develop"
+        path: sbt
+    - name: Setup JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: "${{ matrix.distribution }}"
+        java-version: "${{ matrix.java }}"
+    - uses: sbt/setup-sbt@v1
+    - name: Build
+      shell: bash
+      run: |
+        mode=nightly bin/run-ci.sh
+      env:
+        NIGHTLY_BUILD: true
+        BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
+        BINTRAY_PASS: ${{ secrets.BINTRAY_PASS }}
