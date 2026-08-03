@@ -5,7 +5,7 @@ on:
       sbt_ver:
         description: the version of sbt to release
         required: true
-        default: 1.12.x
+        default: 2.0.x
       dist_patchver:
         description: patch version if needed
         required: true

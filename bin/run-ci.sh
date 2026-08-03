@@ -27,12 +27,15 @@ releaseLinux() {
   popd
 }
 
+installGpgkey() {
+  gpg --version
+  echo "$PGP_SECRET" | base64 --decode | gpg --batch --import
+}
+
 releaseNightly() {
   pushd sbt
 
-  gpg --version
-  echo "$PGP_SECRET" | base64 --decode | gpg --batch --import
-
+  installGpgkey
   BASE_VERSION="2.1.0"
   DATE_STR="$(date -u +%Y%m%d)"
   if ! GIT_SHA_FULL="$(git rev-parse HEAD 2>/dev/null)"; then
@@ -58,6 +61,25 @@ releaseNightly() {
   popd
 }
 
+releaseSonatype() {
+  pushd sbt
+
+  installGpgkey
+
+  echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
+  echo "ThisBuild / version := \"$SBT_VER\"" >> local.sbt
+
+  mkdir -p $HOME/.sbt/
+  echo "host = central.sonatype.com"   > $HOME/.sbt/credentials
+  echo "user = $SONATYPE_USERNAME"     >> $HOME/.sbt/credentials
+  echo "password = $SONATYPE_PASSWORD" >> $HOME/.sbt/credentials
+
+  sbt --server $RELEASE_COMMAND
+
+  rm -f $HOME/.sbt/credentials
+  popd
+}
+
 case ${mode:-} in
   build)
     echo Linux build
@@ -70,6 +92,10 @@ case ${mode:-} in
   nightly)
     echo nightly
     releaseNightly
+    ;;
+  sonatype)
+    echo Sonatype release
+    releaseSonatype
     ;;
   *)
     echo no mode is set
