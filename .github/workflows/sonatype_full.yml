@@ -8,7 +8,7 @@ on:
         default: 2.0.x
 
 jobs:
-  nightly:
+  build:
     strategy:
       matrix:
         include:
