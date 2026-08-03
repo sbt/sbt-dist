@@ -70,9 +70,9 @@ releaseSonatype() {
   echo "ThisBuild / version := \"$SBT_VER\"" >> local.sbt
 
   mkdir -p $HOME/.sbt/
-  echo "host = central.sonatype.com"   > $HOME/.sbt/credentials
-  echo "user = $SONATYPE_USERNAME"     >> $HOME/.sbt/credentials
-  echo "password = $SONATYPE_PASSWORD" >> $HOME/.sbt/credentials
+  echo "host = central.sonatype.com" > $HOME/.sbt/credentials
+  echo "user = $SONATYPE_USER"       >> $HOME/.sbt/credentials
+  echo "password = $SONATYPE_PASS"   >> $HOME/.sbt/credentials
 
   sbt --server $RELEASE_COMMAND
 
