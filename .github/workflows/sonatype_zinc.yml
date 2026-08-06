@@ -1,0 +1,46 @@
+name: Sonatype Zinc release
+on:
+  workflow_dispatch:
+    inputs:
+      sbt_ver:
+        description: the version of sbt to release
+        required: true
+        default: 2.0.x
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            java: 17
+            distribution: temurin
+    runs-on: ${{ matrix.os }}
+    env:
+      JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M
+      SBT_VER: ${{ github.event.inputs.sbt_ver }}
+    steps:
+    - name: Checkout sbt/sbt-dist
+      uses: actions/checkout@v7
+    - name: Checkout sbt/sbt
+      uses: actions/checkout@v7
+      with:
+        repository: sbt/zinc
+        ref: "2.0.x"
+        path: zinc
+    - name: Setup JDK
+      uses: actions/setup-java@v5
+      with:
+        distribution: "${{ matrix.distribution }}"
+        java-version: "${{ matrix.java }}"
+    - uses: sbt/setup-sbt@v1
+    - name: Build
+      shell: bash
+      run: |
+        mode=sonatype_zinc bin/run-ci.sh
+      env:
+        SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
+        SONATYPE_PASS: ${{ secrets.SONATYPE_PASS }}
+        PGP_SECRET: ${{ secrets.PGP_SECRET }}
+        PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        RELEASE_COMMAND: "release sonaUpload"

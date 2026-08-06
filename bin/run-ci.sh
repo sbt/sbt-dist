@@ -80,6 +80,25 @@ releaseSonatype() {
   popd
 }
 
+releaseSonatypeZinc() {
+  pushd zinc
+
+  installGpgkey
+
+  echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
+  echo "ThisBuild / version := \"$SBT_VER\"" >> local.sbt
+
+  mkdir -p $HOME/.sbt/
+  echo "host = central.sonatype.com" > $HOME/.sbt/credentials
+  echo "user = $SONATYPE_USER"       >> $HOME/.sbt/credentials
+  echo "password = $SONATYPE_PASS"   >> $HOME/.sbt/credentials
+
+  sbt --server $RELEASE_COMMAND
+
+  rm -f $HOME/.sbt/credentials
+  popd
+}
+
 case ${mode:-} in
   build)
     echo Linux build
@@ -96,6 +115,10 @@ case ${mode:-} in
   sonatype)
     echo Sonatype release
     releaseSonatype
+    ;;
+  sonatype_zinc)
+    echo Sonatype Zinc release
+    releaseSonatypeZinc
     ;;
   *)
     echo no mode is set
