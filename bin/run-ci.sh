@@ -86,7 +86,7 @@ releaseSonatypeZinc() {
   installGpgkey
 
   echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
-  echo "ThisBuild / version := \"$SBT_VER\"" >> local.sbt
+  echo "ThisBuild / version := \"$ZINC_VER\"" >> local.sbt
 
   mkdir -p $HOME/.sbt/
   echo "host = central.sonatype.com" > $HOME/.sbt/credentials
