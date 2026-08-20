@@ -1,11 +1,11 @@
-name: Sonatype Zinc release
+name: Sonatype Zinc 1.x release
 on:
   workflow_dispatch:
     inputs:
-      zinc_ver:
+      io_ver:
         description: the version of sbt to release
         required: true
-        default: 2.0.x
+        default: 1.12.x
 
 jobs:
   build:
@@ -13,21 +13,21 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            java: 17
-            distribution: temurin
+            java: 8
+            distribution: zulu
     runs-on: ${{ matrix.os }}
     env:
       JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M
-      ZINC_VER: ${{ github.event.inputs.zinc_ver }}
+      IO_VER: ${{ github.event.inputs.io_ver }}
     steps:
     - name: Checkout sbt/sbt-dist
       uses: actions/checkout@v7
-    - name: Checkout sbt/zinc
+    - name: Checkout sbt/io
       uses: actions/checkout@v7
       with:
-        repository: sbt/zinc
-        ref: v${{ github.event.inputs.zinc_ver }}
-        path: zinc
+        repository: sbt/io
+        ref: v${{ github.event.inputs.io_ver }}
+        path: io
     - name: Setup JDK
       uses: actions/setup-java@v5
       with:
@@ -37,10 +37,10 @@ jobs:
     - name: Build
       shell: bash
       run: |
-        mode=sonatype_zinc bin/run-ci.sh
+        mode=sonatype_io bin/run-ci.sh
       env:
         SONATYPE_USER: ${{ secrets.SONATYPE_USER }}
         SONATYPE_PASS: ${{ secrets.SONATYPE_PASS }}
         PGP_SECRET: ${{ secrets.PGP_SECRET }}
         PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-        RELEASE_COMMAND: "release sonaUpload"
+        RELEASE_COMMAND: "+publishSigned sonaUpload"

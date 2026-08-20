@@ -22,7 +22,7 @@ jobs:
     steps:
     - name: Checkout sbt/sbt-dist
       uses: actions/checkout@v7
-    - name: Checkout sbt/sbt
+    - name: Checkout sbt/zinc
       uses: actions/checkout@v7
       with:
         repository: sbt/zinc

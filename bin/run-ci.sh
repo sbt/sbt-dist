@@ -61,41 +61,45 @@ releaseNightly() {
   popd
 }
 
-releaseSonatype() {
-  pushd sbt
-
-  installGpgkey
-
-  echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
-  echo "ThisBuild / version := \"$SBT_VER\"" >> local.sbt
-
+setupSonatype() {
   mkdir -p $HOME/.sbt/
   echo "host = central.sonatype.com" > $HOME/.sbt/credentials
   echo "user = $SONATYPE_USER"       >> $HOME/.sbt/credentials
   echo "password = $SONATYPE_PASS"   >> $HOME/.sbt/credentials
+}
+
+releaseSonatypeCommon() {
+  installGpgkey
+
+  echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
+  echo "ThisBuild / version := \"$BUILD_VER\"" >> local.sbt
+
+  setupSonatype
 
   sbt --server $RELEASE_COMMAND
 
   rm -f $HOME/.sbt/credentials
+}
+
+
+releaseSonatype() {
+  pushd sbt
+  export BUILD_VER="$SBT_VER"
+  releaseSonatypeCommon
   popd
 }
 
 releaseSonatypeZinc() {
   pushd zinc
+  export BUILD_VER="$ZINC_VER"
+  releaseSonatypeCommon
+  popd
+}
 
-  installGpgkey
-
-  echo "credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
-  echo "ThisBuild / version := \"$ZINC_VER\"" >> local.sbt
-
-  mkdir -p $HOME/.sbt/
-  echo "host = central.sonatype.com" > $HOME/.sbt/credentials
-  echo "user = $SONATYPE_USER"       >> $HOME/.sbt/credentials
-  echo "password = $SONATYPE_PASS"   >> $HOME/.sbt/credentials
-
-  sbt --server $RELEASE_COMMAND
-
-  rm -f $HOME/.sbt/credentials
+releaseSonatypeIo() {
+  pushd io
+  export BUILD_VER="$IO_VER"
+  releaseSonatypeCommon
   popd
 }
 
@@ -119,6 +123,10 @@ case ${mode:-} in
   sonatype_zinc)
     echo Sonatype Zinc release
     releaseSonatypeZinc
+    ;;
+  sonatype_io)
+    echo Sonatype IO release
+    releaseSonatypeIo
     ;;
   *)
     echo no mode is set
