@@ -1,4 +1,4 @@
-name: Sonatype Zinc 1.x release
+name: Sonatype IO 1.x release
 on:
   workflow_dispatch:
     inputs:
