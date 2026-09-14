@@ -9,6 +9,14 @@ buildLinux() {
   popd
 }
 
+buildLinux2x() {
+  pushd sbt
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false "debug;launcherPackage/Universal/packageBin;launcherPackage/Universal/packageZipTarball"
+  mv launcher-package/target/universal/sbt.zip launcher-package/target/universal/sbt-$SBT_VER.zip
+  mv launcher-package/target/universal/sbt.tgz launcher-package/target/universal/sbt-$SBT_VER.tgz
+  popd
+}
+
 releaseLinux() {
   pushd sbt
   echo "LocalProject(\"launcherPackage\") / credentials += Credentials(Path.userHome / \".sbt\" / \"credentials\")" > local.sbt
@@ -107,6 +115,10 @@ case ${mode:-} in
   build)
     echo Linux build
     buildLinux
+    ;;
+  build2x)
+    echo Linux build 2.x
+    buildLinux2x
     ;;
   linuxrelease)
     echo Linux release

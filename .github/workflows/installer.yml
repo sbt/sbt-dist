@@ -49,12 +49,12 @@ jobs:
       if: ${{ matrix.jobtype == 1 }}
       shell: bash
       run: |
-        mode=build bin/run-ci.sh
+        mode=build2x bin/run-ci.sh
     - name: Build (2)
       if: ${{ matrix.jobtype == 2 }}
       shell: bash
       run: |
-        mode=build bin/run-ci-win.sh
+        mode=build2x bin/run-ci-win.sh
     - name: Cleanup
       shell: bash
       run: |
