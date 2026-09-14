@@ -3,7 +3,7 @@ set -eu
 
 buildLinux() {
   pushd sbt
-  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false clean launcherPackage/Universal/packageBin launcherPackage/Universal/packageZipTarball
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false "launcherPackage/Universal/packageBin;launcherPackage/Universal/packageZipTarball"
   mv launcher-package/target/universal/sbt.zip launcher-package/target/universal/sbt-$SBT_VER.zip
   mv launcher-package/target/universal/sbt.tgz launcher-package/target/universal/sbt-$SBT_VER.tgz
   popd

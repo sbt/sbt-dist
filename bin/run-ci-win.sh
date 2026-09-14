@@ -3,7 +3,7 @@ set -eu
 
 buildWindows() {
   pushd sbt
-  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false clean launcherPackage/Windows/packageBin
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false "launcherPackage/Windows/packageBin"
   ls launcher-package/target
   ls launcher-package/target/windows/
   mv launcher-package/target/windows/sbt.msi launcher-package/target/windows/sbt-$SBT_VER.msi
