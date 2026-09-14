@@ -12,8 +12,9 @@ buildLinux() {
 buildLinux2x() {
   pushd sbt
   sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false "debug;launcherPackage/Universal/packageBin;launcherPackage/Universal/packageZipTarball"
-  mv launcher-package/target/universal/sbt.zip launcher-package/target/universal/sbt-$SBT_VER.zip
-  mv launcher-package/target/universal/sbt.tgz launcher-package/target/universal/sbt-$SBT_VER.tgz
+  mkdir -p launcher-package/target/universal
+  mv target/out/jvm/u/sbt-launcher-packaging/universal/sbt.zip launcher-package/target/universal/sbt-$SBT_VER.zip
+  mv target/out/jvm/u/sbt-launcher-packaging/universal/sbt.tgz launcher-package/target/universal/sbt-$SBT_VER.tgz
   popd
 }
 
