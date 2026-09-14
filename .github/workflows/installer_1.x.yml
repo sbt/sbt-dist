@@ -1,11 +1,11 @@
-name: Make installer 2.x
+name: Make installer 1.x
 on:
   workflow_dispatch:
     inputs:
       sbt_ver:
         description: the version of sbt to release
         required: true
-        default: 2.1.x
+        default: 2.0.x
       dist_patchver:
         description: patch version if needed
         required: true
@@ -16,11 +16,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            java: 17
+            java: 8
             distribution: temurin
             jobtype: 1
           - os: windows-latest
-            java: 17
+            java: 8
             distribution: temurin
             jobtype: 2
     runs-on: ${{ matrix.os }}
