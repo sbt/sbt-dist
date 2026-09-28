@@ -19,7 +19,7 @@ jobs:
             java: 17
             distribution: temurin
             jobtype: 1
-          - os: windows-latest
+          - os: windows-2022
             java: 17
             distribution: temurin
             jobtype: 2
