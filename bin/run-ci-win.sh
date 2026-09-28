@@ -12,7 +12,7 @@ buildWindows() {
 
 buildWindows2x() {
   pushd sbt
-  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false "debug;launcherPackage/Windows/packageBin"
+  sbt -Dsbt.version=2.0.9 -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false "debug;launcherPackage/Windows/packageBin"
   mkdir -p launcher-package/target/windows
   mv target/out/jvm/u/sbt-launcher-packaging/windows/sbt.msi launcher-package/target/windows/sbt-$SBT_VER.msi
   popd
