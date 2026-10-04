@@ -43,4 +43,4 @@ jobs:
         SONATYPE_PASS: ${{ secrets.SONATYPE_PASS }}
         PGP_SECRET: ${{ secrets.PGP_SECRET }}
         PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
-        RELEASE_COMMAND: "+publishSigned sonaUpload"
+        RELEASE_COMMAND: "+publishSigned sonaRelease"
