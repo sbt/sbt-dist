@@ -112,6 +112,13 @@ releaseSonatypeIo() {
   popd
 }
 
+releaseSonatypeLauncher() {
+  pushd launcher
+  export BUILD_VER="$LAUNCHER_VER"
+  releaseSonatypeCommon
+  popd
+}
+
 case ${mode:-} in
   build)
     echo Linux build
@@ -140,6 +147,10 @@ case ${mode:-} in
   sonatype_io)
     echo Sonatype IO release
     releaseSonatypeIo
+    ;;
+  sonatype_launcher)
+    echo Sonatype Launcher release
+    releaseSonatypeLauncher
     ;;
   *)
     echo no mode is set
