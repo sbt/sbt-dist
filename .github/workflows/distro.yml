@@ -18,7 +18,7 @@ jobs:
         include:
           - os: ubuntu-latest
             java: 8
-            distribution: temurin
+            distribution: zulu
     runs-on: ${{ matrix.os }}
     env:
       JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M
@@ -38,6 +38,7 @@ jobs:
       with:
         distribution: "${{ matrix.distribution }}"
         java-version: "${{ matrix.java }}"
+        check-latest: "true"
     - name: Distrust compromised eMudhra intermediate CAs
       shell: bash
       run: |

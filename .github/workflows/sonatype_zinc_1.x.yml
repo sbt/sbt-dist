@@ -33,6 +33,7 @@ jobs:
       with:
         distribution: "${{ matrix.distribution }}"
         java-version: "${{ matrix.java }}"
+        check-latest: "true"
     - name: Distrust compromised eMudhra intermediate CAs
       shell: bash
       run: |
