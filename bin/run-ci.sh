@@ -11,7 +11,7 @@ buildLinux() {
 
 buildLinux2x() {
   pushd sbt
-  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false "debug;launcherPackage/Universal/packageBin;launcherPackage/Universal/packageZipTarball"
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false "launcherPackage/Universal/packageBin;launcherPackage/Universal/packageZipTarball"
   mkdir -p launcher-package/target/universal
   mv target/out/jvm/u/sbt-launcher-packaging/universal/sbt.zip launcher-package/target/universal/sbt-$SBT_VER.zip
   mv target/out/jvm/u/sbt-launcher-packaging/universal/sbt.tgz launcher-package/target/universal/sbt-$SBT_VER.tgz
@@ -26,13 +26,15 @@ releaseLinux() {
   echo "host = scala.jfrog.io"     >> $HOME/.sbt/credentials
   echo "user = $BINTRAY_USER"      >> $HOME/.sbt/credentials
   echo "password = $BINTRAY_PASS"  >> $HOME/.sbt/credentials
-  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlaunch=false launcherPackage/Rpm/publish launcherPackage/Debian/packageBin
-  rm -f $HOME/.sbt/credentials
-
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlaunch=false "debug;launcherPackage/Debian/packageBin"
+  mv target/out/jvm/u/sbt-launcher-packaging/linux/sbt_${SBT_VER}_.deb "launcher-package/target/sbt_${SBT_VER}_all.deb"
   curl -H "X-JFrog-Art-Api:$BINTRAY_PASS" -XPUT "https://scala.jfrog.io/artifactory/debian/sbt-$SBT_VER.deb;deb.distribution=all;deb.component=main;deb.architecture=all" -T "launcher-package/target/sbt_${SBT_VER}_all.deb"
-
   # https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-CalculateDebianRepositoryMetadata
   curl --user "$BINTRAY_USER:$BINTRAY_PASS" https://scala.jfrog.io/artifactory/api/deb/reindex/debian --data ""
+
+  sbt -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlaunch=false "launcherPackage/Rpm/publish"
+
+  rm -f $HOME/.sbt/credentials
   popd
 }
 
