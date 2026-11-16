@@ -28,8 +28,8 @@ releaseLinux() {
   echo "password = $BINTRAY_PASS"  >> $HOME/.sbt/credentials
   sbt --server -Dsbt.build.version=$SBT_VER -Dsbt.build.offline=false -Dsbt.build.includesbtn=false -Dsbt.build.includesbtlaunch=false "debug;launcherPackage/Debian/packageBin"
   ls target/out/jvm/u/sbt-launcher-packaging
-  ls target/out/jvm/u/sbt-launcher-packaging/debian
-  mv target/out/jvm/u/sbt-launcher-packaging/debian/sbt_${SBT_VER}_all.deb "launcher-package/target/sbt_${SBT_VER}_all.deb"
+  mkdir -p launcher-package/target/
+  mv target/out/jvm/u/sbt-launcher-packaging/sbt_${SBT_VER}_all.deb "launcher-package/target/sbt_${SBT_VER}_all.deb"
   curl -H "X-JFrog-Art-Api:$BINTRAY_PASS" -XPUT "https://scala.jfrog.io/artifactory/debian/sbt-$SBT_VER.deb;deb.distribution=all;deb.component=main;deb.architecture=all" -T "launcher-package/target/sbt_${SBT_VER}_all.deb"
   # https://www.jfrog.com/confluence/display/JFROG/Artifactory+REST+API#ArtifactoryRESTAPI-CalculateDebianRepositoryMetadata
   curl --user "$BINTRAY_USER:$BINTRAY_PASS" https://scala.jfrog.io/artifactory/api/deb/reindex/debian --data ""
